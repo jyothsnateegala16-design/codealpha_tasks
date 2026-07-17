@@ -1,0 +1,266 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+body {
+    margin: 0;
+    padding: 0;
+    background: #f4f6fb;
+    font-family: "Segoe UI", sans-serif;
+}
+
+/* MAIN CONTAINER */
+.profile-container {
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+}
+
+/* ===== COVER HEADER ===== */
+.profile-header {
+    background: linear-gradient(135deg, #4a4aff, #ff4fd8);
+    height: 180px;
+    border-radius: 20px;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+/* PROFILE CARD */
+.profile-card {
+    background: white;
+    margin-top: -60px;
+    padding: 25px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    position: relative;
+}
+
+/* AVATAR */
+.avatar {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff6a00, #ee0979);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 42px;
+    font-weight: bold;
+    color: white;
+    margin: -65px auto 15px;
+    border: 5px solid white;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    overflow:hidden;
+}
+
+.profile-avatar{
+
+    width:100%;
+    height:100%;
+
+    border-radius:50%;
+
+    object-fit:cover;
+
+}
+
+/* USERNAME */
+.username {
+    font-size: 26px;
+    font-weight: 700;
+    color: #222;
+}
+
+/* STATS */
+.stats {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+.stat-box {
+    flex: 1;
+    margin: 0 5px;
+    padding: 15px;
+    background: #f8f9ff;
+    border-radius: 14px;
+    transition: 0.3s;
+}
+
+.stat-box:hover {
+    transform: translateY(-5px);
+    background: #eef1ff;
+}
+
+.stat-number {
+    font-size: 20px;
+    font-weight: bold;
+    color: #4a4aff;
+}
+
+/* BUTTON */
+.follow-btn {
+    margin-top: 15px;
+    padding: 8px 18px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: bold;
+    background: linear-gradient(135deg, #4a4aff, #ff4fd8);
+    color: white;
+    transition: 0.3s;
+}
+
+.follow-btn:hover {
+    transform: scale(1.05);
+}
+
+/* POST CARD (preview style) */
+.post-card {
+    background: white;
+    margin-top: 15px;
+    padding: 18px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+    border-left: 5px solid #4a4aff;
+    transition: 0.3s;
+}
+
+.post-card:hover {
+    transform: scale(1.01);
+}
+
+.post-meta {
+    font-size: 12px;
+    color: gray;
+    margin-top: 8px;
+}
+
+
+</style>
+
+
+<div class="profile-container">
+
+    <!-- COVER HEADER -->
+    <div class="profile-header"></div>
+
+    <!-- PROFILE CARD -->
+    <div class="profile-card">
+
+        <!-- AVATAR -->
+        <div class="avatar">
+
+         {% if profile_user.profile.image %}
+
+            <img src="{{ profile_user.profile.image.url }}"
+                alt="Profile Image"
+                class="profile-avatar">
+
+            {% else %}
+
+                {{ profile_user.username|first|upper }}
+
+         {% endif %}
+
+        </div>
+
+        <!-- USERNAME -->
+        <div class="username">
+            {{ profile_user.username }}
+        </div>
+        
+        <!-- CHANGE PROFILE IMAGE BUTTON -->
+        {% if request.user == profile_user %}
+        <a href="{% url 'upload_image' %}" class="follow-btn" style="display:inline-block; margin:10px;">
+            📸 Change Profile Picture
+        </a>
+        {% endif %}
+
+
+        <!-- FOLLOW BUTTON -->
+        {% if request.user != profile_user %}
+        <form action="{% url 'follow_user' profile_user.id %}" method="POST">
+             {% csrf_token %}
+
+            <button class="follow-btn">
+                {% if is_following %}
+                    ✅ Following
+                {% else %}
+                    ➕ Follow
+                {% endif %}
+            </button>
+        </form>
+        {% endif %}
+
+        <!-- STATS -->
+        <div class="stats">
+
+            <div class="stat-box">
+                <div class="stat-number">{{ posts.count }}</div>
+                <div>Posts</div>
+            </div>
+
+            <div class="stat-box">
+                <div class="stat-number">{{ followers_count }}</div>
+                <div>Followers</div>
+            </div>
+
+            <div class="stat-box">
+                <div class="stat-number">{{ following_count }}</div>
+                <div>Following</div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- POSTS SECTION -->
+    {% for post in posts %}
+    <div class="post-card">
+
+        <p style="font-size:16px; margin:0;">
+            {{ post.content }}
+        </p>
+
+        <div class="post-meta">
+            ⏰ {{ post.created_at }}
+        </div>
+
+        <div style="margin-top:10px; display:flex; justify-content:space-between;">
+
+            <span style="color:#e74c3c; font-weight:bold;">
+                ❤️ {{ post.likes.count }} Likes
+            </span>
+
+            <span style="color:#3498db; font-weight:bold;">
+                💬 {{ post.comments.count }} Comments
+            </span>
+
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        {% if request.user == post.user %}
+        <div style="margin-top:10px;">
+            <a href="{% url 'edit_post' post.id %}" class="follow-btn" style="padding:6px 12px; font-size:12px;">
+                ✏️ Edit
+            </a>
+
+            <a href="{% url 'delete_post' post.id %}" class="follow-btn" style="padding:6px 12px; font-size:12px; background:linear-gradient(135deg,#ff4d4d,#ff884d);">
+                🗑️ Delete
+            </a>
+        </div>
+        {% endif %}
+
+    </div>
+
+    {% empty %}
+        <p style="text-align:center; color:gray; margin-top:20px;">
+            No posts yet 😢
+        </p>
+    {% endfor %}
+
+</div>
+
+{% endblock %}

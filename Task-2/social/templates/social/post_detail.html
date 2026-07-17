@@ -1,0 +1,297 @@
+{% extends 'base.html' %}
+
+{% block title %}Post Details{% endblock %}
+
+{% block content %}
+
+<style>
+body{
+    background: #f4f6fb;
+    font-family: "Segoe UI", sans-serif;
+}
+
+/* CONTAINER */
+.post-wrapper{
+    display: flex;
+    justify-content: center;
+    padding: 30px 15px;
+}
+
+/* POST CARD */
+.post-card{
+    width: 100%;
+    max-width: 750px;
+    background: white;
+    border-radius: 18px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+    overflow: hidden;
+}
+
+/* HEADER */
+.post-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.user-box{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.avatar{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg,#4a4aff,#ff4fd8);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
+
+.username{
+    font-weight: bold;
+}
+
+/* BODY */
+.post-body{
+    padding: 20px;
+}
+
+.post-body p{
+    font-size: 17px;
+    line-height: 1.6;
+}
+
+/* IMAGE */
+.post-img{
+    width: 100%;
+    border-radius: 12px;
+    margin-top: 10px;
+}
+
+/* LIKE */
+.like-section{
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.like-btn{
+    background: white;
+    border: 1px solid #ff4d6d;
+    color: #ff4d6d;
+    padding: 8px 15px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.like-btn:hover{
+    background: #ff4d6d;
+    color: white;
+}
+
+/* COMMENT CARD */
+.comment-card{
+    margin-top: 20px;
+    background: white;
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.06);
+}
+
+.comment-header{
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+/* FORM */
+.comment-form textarea{
+    width: 100%;
+    border-radius: 14px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    resize: none;
+    outline: none;
+}
+
+.comment-form button{
+    margin-top: 8px;
+    background: linear-gradient(135deg,#4a4aff,#ff4fd8);
+    color: white;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 25px;
+    cursor: pointer;
+}
+
+/* COMMENTS */
+.comment-item{
+    display: flex;
+    gap: 12px;
+    margin-top: 15px;
+}
+
+.comment-avatar{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg,#4a4aff,#ff4fd8);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.comment-box{
+    background: #f7f8ff;
+    padding: 10px 12px;
+    border-radius: 14px;
+}
+
+.comment-user{
+    font-weight: bold;
+    color: #4a4aff;
+    font-size: 13px;
+}
+
+.comment-time{
+    font-size: 11px;
+    color: gray;
+}
+
+.empty{
+    color: gray;
+    font-size: 14px;
+}
+
+/* BACK BUTTON */
+.back-btn{
+    margin-top: 15px;
+    display: inline-block;
+    background: #eee;
+    padding: 8px 15px;
+    border-radius: 25px;
+    text-decoration: none;
+    color: #333;
+}
+</style>
+
+<div class="post-wrapper">
+
+    <div>
+
+        <!-- POST CARD -->
+        <div class="post-card">
+
+            <!-- HEADER -->
+            <div class="post-header">
+
+                <div class="user-box">
+                    <div class="avatar">
+                        {{ post.user.username|first|upper }}
+                    </div>
+                    <div class="username">
+                        {{ post.user.username }}
+                    </div>
+                </div>
+
+                <small>{{ post.created_at }}</small>
+
+            </div>
+
+            <!-- BODY -->
+            <div class="post-body">
+
+                <p>{{ post.content }}</p>
+
+                {% if post.image %}
+                    <img src="{{ post.image.url }}" class="post-img">
+                {% endif %}
+
+                <!-- LIKE -->
+                <div class="like-section">
+                    <form method="POST" action="{% url 'like_post' post.id %}">
+                        {% csrf_token %}
+                        <button class="like-btn">❤️ Like</button>
+                    </form>
+
+                    <b>{{ post.like_set.count }} Likes</b>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- COMMENT SECTION -->
+        <div class="comment-card">
+
+            <div class="comment-header">💬 Comments</div>
+
+            <!-- FORM -->
+            <form method="POST" action="{% url 'add_comment' post.id %}" class="comment-form">
+                {% csrf_token %}
+
+                <textarea name="content" rows="2" placeholder="Write a comment..."></textarea>
+
+                <button type="submit">Post</button>
+            </form>
+
+            <!-- LIST -->
+            {% for comment in comments %}
+
+
+                <div class="comment-item">
+
+                    <div class="comment-avatar">
+                        {{ comment.user.username|first|upper }}
+                    </div>
+
+                    <div>
+                        <div class="comment-box">
+                            <div class="comment-user">
+                                {{ comment.user.username }}
+                            </div>
+                            <div>{{ comment.content }}</div>
+                        </div>
+
+                        <div class="comment-time">
+                            {{ comment.created_at }}
+                        </div>
+                    </div>
+
+                </div>
+                {% if request.user == comment.user %}
+                <form method="POST"
+                    action="{% url 'delete_comment' comment.id %}"
+                    style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit"
+                        style="border:none;background:none;color:red;cursor:pointer;font-size:13px;">
+                        🗑️ Delete
+                    </button>
+                </form>
+                {% endif %}
+            {% empty %}
+                <p class="empty">No comments yet. Be first 👍</p>
+            {% endfor %}
+
+        </div>
+
+        <!-- BACK -->
+        <a href="{% url 'home' %}" class="back-btn">← Back to Home</a>
+
+    </div>
+
+</div>
+
+{% endblock %}

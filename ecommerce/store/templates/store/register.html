@@ -1,0 +1,106 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+
+<style>
+
+/* ===== PAGE BACKGROUND ===== */
+body {
+    background: #f5f7fb;
+}
+
+/* ===== CARD STYLE ===== */
+.register-card {
+    border-radius: 15px;
+    border: none;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+/* ===== TITLE ===== */
+.register-title {
+    font-weight: 600;
+    text-align: center;
+}
+
+/* ===== INPUT STYLE ===== */
+input {
+    border-radius: 8px !important;
+    padding: 10px !important;
+}
+
+/* ===== BUTTON ===== */
+.btn-register {
+    background-color: #16a34a;
+    color: white;
+    border-radius: 8px;
+    padding: 10px;
+    width: 100%;
+    border: none;
+}
+
+.btn-register:hover {
+    background-color: #15803d;
+}
+
+/* ===== LINK ===== */
+a {
+    text-decoration: none;
+}
+
+</style>
+
+<div class="row justify-content-center mt-5">
+
+    <div class="col-md-5">
+
+        <div class="card register-card p-4">
+
+            <h2 class="register-title mb-2">📝 Create Account</h2>
+
+            <p class="text-center text-muted">
+                Join us and start shopping
+            </p>
+
+            <hr>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label>Username</label>
+                    {{ form.username }}
+                    <div class="text-danger small">{{ form.username.errors }}</div>
+                </div>
+
+                <div class="mb-3">
+                    <label>Password</label>
+                    {{ form.password1 }}
+                    <div class="text-danger small">{{ form.password1.errors }}</div>
+                </div>
+
+                <div class="mb-3">
+                    <label>Confirm Password</label>
+                    {{ form.password2 }}
+                    <div class="text-danger small">{{ form.password2.errors }}</div>
+                </div>
+
+                <button type="submit" class="btn-register">
+                    Create Account 🚀
+                </button>
+
+            </form>
+
+            <hr>
+
+            <p class="text-center">
+                Already have an account?
+                <a href="{% url 'login' %}">Login</a>
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

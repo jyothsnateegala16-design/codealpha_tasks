@@ -1,0 +1,133 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+
+<style>
+body {
+    background: #f6f7fb;
+}
+
+.success-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+}
+
+.success-card {
+    background: #fff;
+    padding: 45px 35px;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+    max-width: 520px;
+    width: 100%;
+    text-align: center;
+    animation: fadeIn 0.6s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {opacity: 0; transform: translateY(10px);}
+    to {opacity: 1; transform: translateY(0);}
+}
+
+.success-icon {
+    font-size: 65px;
+    margin-bottom: 10px;
+}
+
+.success-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: #16a34a;
+}
+
+.success-sub {
+    color: #6b7280;
+    margin-top: 5px;
+    font-size: 14px;
+}
+
+.status-box {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f0fdf4;
+    border-left: 5px solid #22c55e;
+    border-radius: 10px;
+    text-align: left;
+    font-size: 14px;
+}
+
+.status-box p {
+    margin: 6px 0;
+}
+
+.btn-group {
+    margin-top: 25px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.btn-home, .btn-order {
+    padding: 10px 16px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.btn-home {
+    background: #2563eb;
+    color: white;
+}
+
+.btn-home:hover {
+    background: #1d4ed8;
+}
+
+.btn-order {
+    background: #111827;
+    color: white;
+}
+
+.btn-order:hover {
+    background: #000;
+}
+</style>
+
+<div class="success-wrapper">
+
+    <div class="success-card">
+
+        <div class="success-icon">🎉</div>
+
+        <div class="success-title">Order Confirmed!</div>
+
+        <div class="success-sub">
+            Your order has been successfully placed and is now being processed.
+        </div>
+
+        <div class="status-box">
+            <p>📦 <strong>Status:</strong> Pending</p>
+            <p>🚚 <strong>Next:</strong> Packing & Shipping will start soon</p>
+            <p>📩 <strong>Update:</strong> You will get notifications on status changes</p>
+        </div>
+
+        <div class="btn-group">
+
+            <a href="{% url 'home' %}" class="btn-home">
+                🛍️ Continue Shopping
+            </a>
+
+            <a href="{% url 'order_history' %}" class="btn-order">
+                📦 My Orders
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

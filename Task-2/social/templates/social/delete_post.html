@@ -1,0 +1,181 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete Post{% endblock %}
+
+{% block content %}
+
+<style>
+body{
+    background: #f4f6fb;
+    font-family: "Segoe UI", sans-serif;
+}
+
+/* CENTER WRAPPER */
+.delete-wrapper{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    padding: 20px;
+}
+
+/* CARD */
+.delete-card{
+    width: 100%;
+    max-width: 550px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.12);
+    overflow: hidden;
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+/* HEADER */
+.delete-header{
+    background: linear-gradient(135deg,#ff3b3b,#ff6b6b);
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+.delete-header h2{
+    margin: 0;
+    font-size: 22px;
+}
+
+/* BODY */
+.delete-body{
+    padding: 25px;
+    text-align: center;
+}
+
+/* WARNING ICON */
+.warning-icon{
+    font-size: 45px;
+    margin-bottom: 10px;
+}
+
+/* TEXT */
+.delete-body p{
+    font-size: 16px;
+    color: #444;
+    margin-bottom: 15px;
+}
+
+/* POST BOX */
+.post-preview{
+    background: #f8f9ff;
+    border-left: 4px solid #ff4d4d;
+    padding: 15px;
+    border-radius: 10px;
+    font-style: italic;
+    margin: 15px 0;
+    color: #333;
+}
+
+/* BUTTONS */
+.btn-row{
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/* DELETE BTN */
+.btn-delete{
+    flex: 1;
+    background: linear-gradient(135deg,#ff3b3b,#ff6b6b);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-delete:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(255,59,59,0.3);
+}
+
+/* CANCEL BTN */
+.btn-cancel{
+    flex: 1;
+    display: inline-block;
+    text-align: center;
+    background: #eee;
+    color: #333;
+    padding: 12px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn-cancel:hover{
+    background: #ddd;
+}
+
+/* ANIMATION */
+@keyframes fadeIn{
+    from{
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to{
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+</style>
+
+<div class="delete-wrapper">
+
+    <div class="delete-card">
+
+        <!-- HEADER -->
+        <div class="delete-header">
+            <h2>🗑️ Delete Confirmation</h2>
+        </div>
+
+        <!-- BODY -->
+        <div class="delete-body">
+
+            <div class="warning-icon">⚠️</div>
+
+            <p>
+                Are you absolutely sure you want to delete this post?
+            </p>
+
+            <div class="post-preview">
+                "{{ post.content }}"
+            </div>
+
+            <p style="font-size:13px;color:#888;">
+                This action cannot be undone.
+            </p>
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="btn-row">
+
+                    <button type="submit" class="btn-delete">
+                        Yes, Delete
+                    </button>
+
+                    <a href="{% url 'home' %}" class="btn-cancel">
+                        Cancel
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

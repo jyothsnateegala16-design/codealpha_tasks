@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Create Post | SocialHub{% endblock %}
+
+{% block content %}
+
+<style>
+
+body{
+    background:linear-gradient(135deg,#eef5ff,#f8fbff,#ffffff);
+}
+
+.post-wrapper{
+    min-height:85vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:30px 15px;
+}
+
+.post-card{
+    width:100%;
+    max-width:750px;
+    background:#fff;
+    border-radius:22px;
+    box-shadow:0 15px 35px rgba(0,0,0,.12);
+    overflow:hidden;
+}
+
+.post-header{
+    background:linear-gradient(90deg,#1877f2,#4f8cff);
+    color:white;
+    padding:22px;
+    text-align:center;
+}
+
+.post-header h2{
+    margin:0;
+    font-weight:700;
+}
+
+.post-body{
+    padding:30px;
+}
+
+.form-label{
+    font-weight:600;
+    margin-bottom:8px;
+    display:block;
+    color:#333;
+}
+
+textarea,
+input[type="file"]{
+    width:100%;
+    border:1px solid #ddd;
+    border-radius:12px;
+    padding:12px;
+    margin-bottom:20px;
+    background:#fafafa;
+}
+
+textarea{
+    min-height:180px;
+    resize:none;
+}
+
+textarea:focus,
+input[type="file"]:focus{
+    outline:none;
+    border-color:#1877f2;
+    box-shadow:0 0 0 4px rgba(24,119,242,.12);
+    background:#fff;
+}
+
+.button-group{
+    display:flex;
+    gap:15px;
+}
+
+.publish-btn{
+    flex:1;
+    background:linear-gradient(90deg,#1877f2,#4f8cff);
+    color:white;
+    border:none;
+    padding:13px;
+    border-radius:12px;
+    font-size:16px;
+    font-weight:bold;
+    transition:.3s;
+}
+
+.publish-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 20px rgba(24,119,242,.25);
+}
+
+.cancel-btn{
+    flex:1;
+    text-decoration:none;
+    text-align:center;
+    background:#6c757d;
+    color:white;
+    padding:13px;
+    border-radius:12px;
+    font-weight:bold;
+    transition:.3s;
+}
+
+.cancel-btn:hover{
+    background:#5a6268;
+    color:white;
+}
+
+.tip{
+    margin-top:18px;
+    text-align:center;
+    color:#777;
+    font-size:14px;
+}
+
+</style>
+
+<div class="post-wrapper">
+
+<div class="post-card">
+
+<div class="post-header">
+<h2>📝 Create New Post</h2>
+<p class="mb-0">Share your thoughts with your friends</p>
+</div>
+
+<div class="post-body">
+
+<form method="POST" enctype="multipart/form-data">
+
+{% csrf_token %}
+
+<label class="form-label">✍️ What's on your mind?</label>
+{{ form.content }}
+
+<label class="form-label">🖼️ Upload Image (Optional)</label>
+{{ form.image }}
+
+<div class="button-group">
+
+<button type="submit" class="publish-btn">
+🚀 Publish Post
+</button>
+
+<a href="{% url 'home' %}" class="cancel-btn">
+❌ Cancel
+</a>
+
+</div>
+
+</form>
+
+<div class="tip">
+💡 Share something inspiring with your friends today!
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

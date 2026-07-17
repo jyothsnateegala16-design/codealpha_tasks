@@ -1,0 +1,31 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+
+<div class="row mt-4">
+
+    <div class="col-md-5">
+        {% if product.image %}
+            <img src="{{ product.image.url }}" class="img-fluid rounded shadow" style="height:350px; object-fit:contain;">
+        {% endif %}
+    </div>
+
+    <div class="col-md-7">
+        <h2>{{ product.name }}</h2>
+
+        <h3 class="text-success">₹{{ product.price }}</h3>
+
+        <p>{{ product.description }}</p>
+
+        <a href="{% url 'add_to_cart' product.id %}" class="btn btn-primary">
+            Add to Cart 🛒
+        </a>
+
+        <a href="{% url 'home' %}" class="btn btn-secondary">
+            Back
+        </a>
+    </div>
+
+</div>
+
+{% endblock %}

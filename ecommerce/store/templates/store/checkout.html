@@ -1,0 +1,96 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2 class="mb-4">🧾 Checkout</h2>
+
+    <div class="row">
+
+        <!-- LEFT: SUMMARY -->
+        <div class="col-md-7">
+
+            <div class="card shadow-sm">
+                <div class="card-body">
+
+                    <h4>📦 Order Summary</h4>
+                    <hr>
+
+                    <table class="table table-striped align-middle">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Product</th>
+                                <th>Qty</th>
+                                <th>Price</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for item in cart_items %}
+                            <tr>
+                                <td><strong>{{ item.product.name }}</strong></td>
+                                <td>{{ item.quantity }}</td>
+                                <td>₹ {{ item.product.price }}</td>
+                                <td>₹ {{ item.product.price|floatformat:2 }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <hr>
+
+                    <h4 class="text-end text-success">
+                        💰 Total: ₹ {{ total }}
+                    </h4>
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-- RIGHT: FORM -->
+        <div class="col-md-5">
+
+            <div class="card shadow-sm">
+                <div class="card-body">
+
+                    <h4>🚚 Delivery Details</h4>
+                    <hr>
+
+                    <form method="post" action="{% url 'place_order' %}">
+
+                        {% csrf_token %}
+
+                        <div class="mb-2">
+                            <label>Name</label>
+                            <input type="text" name="name" class="form-control" required>
+                        </div>
+
+                        <div class="mb-2">
+                            <label>Address</label>
+                            <textarea name="address" class="form-control" required></textarea>
+                        </div>
+
+                        <div class="mb-2">
+                            <label>Phone</label>
+                            <input type="text" name="phone" class="form-control" required>
+                        </div>
+
+                        <button class="btn btn-success w-100 mt-3">
+                            Place Order 🚀
+                        </button>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

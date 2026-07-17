@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+body{
+    background: #f4f6fb;
+    font-family: "Segoe UI", sans-serif;
+}
+
+/* CENTER WRAPPER */
+.edit-wrapper{
+    display: flex;
+    justify-content: center;
+    padding: 40px 15px;
+}
+
+/* CARD */
+.edit-card{
+    width: 100%;
+    max-width: 750px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+    overflow: hidden;
+}
+
+/* HEADER */
+.edit-header{
+    padding: 18px 25px;
+    background: linear-gradient(135deg,#4a4aff,#ff4fd8);
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* BODY */
+.edit-body{
+    padding: 25px;
+}
+
+/* LABEL */
+label{
+    font-weight: 600;
+    font-size: 14px;
+    color: #444;
+    display: block;
+    margin-bottom: 6px;
+    margin-top: 15px;
+}
+
+/* INPUT + TEXTAREA */
+textarea, input[type="text"], input[type="file"]{
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 12px;
+    font-size: 15px;
+    transition: 0.3s;
+    outline: none;
+    background: #fafafa;
+}
+
+textarea{
+    min-height: 140px;
+    resize: none;
+}
+
+textarea:focus,
+input:focus{
+    border-color: #4a4aff;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(74,74,255,0.15);
+}
+
+/* IMAGE PREVIEW BOX (optional look) */
+.preview-box{
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px dashed #ccc;
+    border-radius: 12px;
+    text-align: center;
+    color: #777;
+    font-size: 13px;
+}
+
+/* BUTTON AREA */
+.btn-row{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 25px;
+    gap: 10px;
+}
+
+/* SAVE BUTTON */
+.btn-save{
+    flex: 1;
+    background: linear-gradient(135deg,#4a4aff,#ff4fd8);
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-save:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(74,74,255,0.3);
+}
+
+/* CANCEL */
+.btn-cancel{
+    flex: 1;
+    text-align: center;
+    padding: 12px;
+    border-radius: 30px;
+    background: #eee;
+    color: #333;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn-cancel:hover{
+    background: #ddd;
+}
+</style>
+
+<div class="edit-wrapper">
+
+    <div class="edit-card">
+
+        <!-- HEADER -->
+        <div class="edit-header">
+            ✏️ Edit Your Post
+        </div>
+
+        <!-- BODY -->
+        <div class="edit-body">
+
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <label>Post Content</label>
+                {{ form.content }}
+
+                <label>Image</label>
+                {{ form.image }}
+
+                <!-- optional preview style box -->
+                <div class="preview-box">
+                    Current image will stay unless you upload new one
+                </div>
+
+                <div class="btn-row">
+                    <button type="submit" class="btn-save">
+                        💾 Save Changes
+                    </button>
+
+                    <a href="{% url 'home' %}" class="btn-cancel">
+                        Cancel
+                    </a>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

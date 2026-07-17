@@ -1,0 +1,127 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2>📦 My Orders</h2>
+            <p class="text-muted mb-0">Track all your purchases here</p>
+        </div>
+
+        <a href="{% url 'home' %}" class="btn btn-outline-primary btn-sm">
+            🛍️ Continue Shopping
+        </a>
+    </div>
+
+    {% if orders %}
+
+        {% for order in orders %}
+
+        <!-- ORDER CARD -->
+        <div class="card shadow-sm mb-3 border-0 rounded-3">
+
+            <div class="card-body">
+
+                <!-- Top Row -->
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <h5 class="mb-0">
+                        🧾 Order #{{ order.id }}
+                    </h5>
+
+                    <!-- Status Badge -->
+                    {% if order.status == 'Pending' %}
+                    <span class="badge bg-warning text-dark px-3 py-2">
+                    🟡 Pending
+                    </span>
+
+                    {% elif order.status == 'Processing' %}
+                    <span class="badge bg-primary px-3 py-2">
+                    🔵 Processing
+                    </span>
+
+                    {% elif order.status == 'Shipped' %}
+                    <span class="badge bg-info px-3 py-2">
+                    🚚 Shipped
+                    </span>
+
+                    {% elif order.status == 'Delivered' %}
+                    <span class="badge bg-success px-3 py-2">
+                    ✅ Delivered
+                    </span>
+
+                    {% else %}
+                    <span class="badge bg-secondary px-3 py-2">
+                    {{ order.status }}
+                    </span>
+                    {% endif %}
+
+                </div>
+
+                <hr>
+
+                <!-- Details Row -->
+                <div class="row text-center">
+
+                    <div class="col-md-4">
+                        <p class="text-muted mb-1">💰 Total Amount</p>
+                        <h6>₹ {{ order.total_amount }}</h6>
+                    </div>
+
+                    <div class="col-md-4">
+                        <p class="text-muted mb-1">📍 Delivery Address</p>
+                        <h6>{{ order.address }}</h6>
+                    </div>
+
+                    <div class="col-md-4">
+                        <p class="text-muted mb-1">📅 Order Date</p>
+                        <h6>{{ order.created_at|date:"d M Y, h:i A" }}</h6>
+                    </div>
+
+                </div>
+
+                <!-- Button -->
+                <div class="text-end mt-3">
+
+                    <a href="{% url 'order_detail' order.id %}"
+                       class="btn btn-primary btn-sm px-4">
+
+                        View Details →
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <!-- EMPTY STATE -->
+        <div class="text-center mt-5">
+
+            <div class="p-5 border rounded-3 bg-light">
+
+                <h4>😔 No Orders Yet</h4>
+                <p class="text-muted">
+                    Start shopping and your orders will appear here
+                </p>
+
+                <a href="{% url 'home' %}" class="btn btn-primary mt-2">
+                    🛍️ Start Shopping
+                </a>
+
+            </div>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

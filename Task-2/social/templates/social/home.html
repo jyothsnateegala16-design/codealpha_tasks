@@ -1,0 +1,265 @@
+{% extends 'base.html' %}
+
+{% block title %}Home Feed{% endblock %}
+
+{% block content %}
+
+<div class="row text-center mb-4">
+
+    <div class="col-md-4">
+        <div class="stats-card">
+            <div class="stats-icon">👥</div>
+            <h3>{{ total_users }}</h3>
+            <p>Users</p>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="stats-card">
+            <div class="stats-icon">📝</div>
+            <h3>{{ total_posts }}</h3>
+            <p>Posts</p>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="stats-card">
+            <div class="stats-icon">❤️</div>
+            <h3>{{ total_likes }}</h3>
+            <p>Likes</p>
+        </div>
+    </div>
+
+</div>
+<!-- SEARCH BAR -->
+<div class="card border-0 shadow-sm mb-4 p-3" style="border-radius:15px;">
+    <form method="GET">
+        <div class="input-group">
+            <input type="text"
+                   name="q"
+                   class="form-control"
+                   placeholder="🔍 Search users or posts..."
+                   value="{{ request.GET.q }}">
+
+            <button class="btn btn-primary" type="submit">
+                Search
+            </button>
+        </div>
+    </form>
+</div>
+
+<div class="container mt-4">
+
+    <div class="row justify-content-center">
+        <div class="col-md-7">
+            <div class="card mb-4 shadow-sm" style="border-radius:18px;">
+            <div class="card-body">
+
+                <div class="d-flex align-items-center">
+
+                    {% if user.profile.image %}
+                    <img src="{{ user.profile.image.url }}"
+                    style="
+                        width:50px;
+                        height:50px;
+                        border-radius:50%;
+                        object-fit:cover;
+                        margin-right:15px;
+                        border:2px solid #fff;
+                        box-shadow:0 2px 8px rgba(0,0,0,.2);
+                    ">
+                    {% else %}
+                    <div style="
+                        width:50px;
+                        height:50px;
+                        border-radius:50%;
+                        background:linear-gradient(135deg,#6a5af9,#d946ef);
+                        color:white;
+                        display:flex;
+                        align-items:center;
+                        justify-content:center;
+                        font-size:22px;
+                        font-weight:bold;
+                        margin-right:15px;">
+                        {{ user.username|first|upper }}
+                    </div>
+                    {% endif %}
+
+                    <div class="flex-grow-1">
+                        <a href="{% url 'create_post' %}"
+                        class="form-control text-start text-decoration-none"
+                        style="border-radius:30px;background:#f1f3f5;padding:12px 20px;color:#666;">
+                            What's on your mind, {{ user.username }}?
+                        </a>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+            {% for post in posts %}
+
+            <!-- POST CARD -->
+            <div class="post-card mb-4">
+
+                <!-- HEADER -->
+                <div class="card-body d-flex justify-content-between align-items-center pb-2">
+
+                    <div class="d-flex align-items-center">
+
+                    {% if post.user.profile.image %}
+                        <img src="{{ post.user.profile.image.url }}"
+                            style="
+                            width:40px;
+                            height:40px;
+                            border-radius:50%;
+                            object-fit:cover;
+                            margin-right:10px;
+                            border:2px solid #fff;
+                            box-shadow:0 2px 8px rgba(0,0,0,.2);
+                        ">
+                        {% else %}
+                    <div style="
+                        width:40px;
+                        height:40px;
+                        border-radius:50%;
+                        background:linear-gradient(135deg,#6a5af9,#d946ef);
+                        color:#fff;
+                        display:flex;
+                        align-items:center;
+                        justify-content:center;
+                        font-weight:bold;
+                        margin-right:10px;">
+                        {{ post.user.username|first|upper }}
+                    </div>
+                    {% endif %}
+                        <a href="{% url 'user_profile' post.user.id %}" 
+                             class="text-decoration-none text-dark">
+                            <strong>{{ post.user.username }}</strong>
+                        </a>
+
+                    </div>
+
+                    <small class="text-muted">
+                        🕒 {{ post.created_at|timesince }} ago
+                    </small>
+                </div>
+
+                <!-- CONTENT -->
+                <div class="card-body pt-0">
+
+                    <p style="font-size:16px;">
+                        {{ post.content }}
+                    </p>
+
+                    {% if post.image %}
+                        <img src="{{ post.image.url }}"
+                             class="img-fluid rounded mb-2"
+                             style="border-radius:12px;">
+                    {% endif %}
+
+                    <!-- ACTIONS -->
+                    <hr>
+
+                    <div class="d-flex justify-content-between text-muted mb-3">
+                    <span id="like-count-{{ post.id }}">
+                        ❤️ {{ post.like_set.count }} Like{{ post.like_set.count|pluralize }}
+                    </span>
+                    <span>💬 {{ post.comment_set.count }} Comment{{ post.comment_set.count|pluralize }}</span>
+                    </div>
+
+                    <div class="d-flex gap-3 mt-3">
+
+                    <button
+                        class="action-btn like-btn flex-fill text-center"
+                        type="button"
+                        data-post-id="{{ post.id }}"
+                        onclick="likePost(this.dataset.postId, this)">
+                        {% if post.id in liked_posts %}
+                            ❤️ Liked
+                        {% else %}
+                             🤍 Like
+                        {% endif %}
+
+                    </button>
+                    <script>
+                        function likePost(postId, btn){
+
+                        fetch(`/like/${postId}/`)
+                        .then(response => response.json())
+                        .then(data => {
+
+                        btn.innerHTML = data.liked 
+                        ? "❤️ Liked" 
+                        : "🤍 Like";
+
+                        document.getElementById(`like-count-${postId}`).innerHTML =
+                        `${data.like_count} Likes`;
+
+
+                        });
+
+                        }
+                    </script>
+                    <a href="{% url 'post_detail' post.id %}" 
+                        class="action-btn comment-btn flex-fill text-center text-decoration-none">
+                              💬 Comment ({{ post.comment_set.count }})
+                         </a>
+
+                    </div>
+                </div>
+
+            </div>
+
+            {% empty %}
+
+        
+
+            <div class="card border-0 shadow-sm text-center p-5 mb-4" style="border-radius:16px;">
+                <h4>😔 No Posts Found</h4>
+                    <p class="text-muted mb-0">
+                        Try searching with a different username or keyword.
+                    </p>
+            </div>
+
+    {% endfor %}
+
+        </div>
+    </div>
+
+</div>
+{% if posts.has_other_pages %}
+<nav class="mt-4">
+    <ul class="pagination justify-content-center">
+
+        <!-- Previous Button -->
+        {% if posts.has_previous %}
+        <li class="page-item">
+            <a class="page-link"
+               href="?page={{ posts.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">
+                ← Previous
+            </a>
+        </li>
+        {% endif %}
+
+        <!-- Current Page -->
+        <li class="page-item active">
+            <span class="page-link">
+                {{ posts.number }} / {{ posts.paginator.num_pages }}
+            </span>
+        </li>
+
+        <!-- Next Button -->
+        {% if posts.has_next %}
+        <li class="page-item">
+            <a class="page-link"
+               href="?page={{ posts.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">
+                Next →
+            </a>
+        </li>
+        {% endif %}
+
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}
